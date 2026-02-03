@@ -16,6 +16,7 @@
       align-items: center;
       font-family: 'Poppins', sans-serif;
       padding: 15px;
+      overflow: hidden;
     }
 
     .card {
@@ -27,6 +28,7 @@
       max-width: 420px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       position: relative;
+      z-index: 2;
     }
 
     h1 {
@@ -94,7 +96,14 @@
       font-size: 14px;
     }
 
-    /* Mobile tweaks */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
     @media (max-width: 480px) {
       h1 { font-size: 24px; }
       h2 { font-size: 20px; }
@@ -104,11 +113,12 @@
 </head>
 
 <body>
+  <canvas id="confetti"></canvas>
+
   <div class="card">
     <h1>Hey Twizznem 💕</h1>
     <p>What month is itttt?</p>
 
-    <!-- PHOTO CONTAINER -->
     <div class="photo-container">
       <img src="photo1.jpg">
       <img src="photo2.jpg">
@@ -131,6 +141,11 @@
     const noBtn = document.getElementById("noBtn");
     const message = document.getElementById("message");
     const fact = document.getElementById("fact");
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
     const messages = [
       "Nice try 😌",
@@ -154,22 +169,20 @@
 
     let count = 0;
     let scale = 1;
+    let confettiPieces = [];
 
     noBtn.addEventListener("mouseover", () => {
       count++;
 
-      // Move button randomly
       const x = Math.random() * 240;
       const y = Math.random() * 40;
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
 
-      // Shrink button
       scale -= 0.08;
       if (scale < 0.4) scale = 0.4;
       noBtn.style.transform = `scale(${scale})`;
 
-      // Message logic
       message.textContent = messages[count % messages.length];
 
       if (count === 3) {
@@ -183,12 +196,62 @@
       }
     });
 
+    // CONFETTI LOGIC
+    function createConfetti() {
+      confettiPieces = [];
+      for (let i = 0; i < 150; i++) {
+        confettiPieces.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * 20,
+          color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+          tilt: Math.random() * 10 - 10
+        });
+      }
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confettiPieces.forEach(p => {
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.r, p.r);
+      });
+      updateConfetti();
+    }
+
+    function updateConfetti() {
+      confettiPieces.forEach(p => {
+        p.y += Math.cos(p.d) + 3;
+        p.x += Math.sin(p.d);
+        if (p.y > canvas.height) {
+          p.y = -10;
+        }
+      });
+    }
+
+    function startConfetti() {
+      createConfetti();
+      const interval = setInterval(drawConfetti, 20);
+      setTimeout(() => {
+        clearInterval(interval);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }, 4000);
+    }
+
     document.getElementById("yesBtn").addEventListener("click", () => {
+      startConfetti();
       document.querySelector(".card").innerHTML = `
         <h1>YEEEEEEE 🎉💖</h1>
         <p>You’re officially my Valentine ❤️</p>
         <p>I knew you’d say yes 😌</p>
       `;
+    });
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     });
   </script>
 </body>
