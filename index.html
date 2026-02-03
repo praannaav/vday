@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Be My Valentine 💖</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      position: relative;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #ff4d6d;
+    }
+
+    p {
+      color: #555;
+    }
+
+    /* PHOTO GRID */
+    .photo-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .photo-container img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    /* BUTTONS */
+    .buttons {
+      margin-top: 20px;
+      position: relative;
+      height: 60px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+    }
+
+    #noBtn {
+      background: #ccc;
+      position: absolute;
+      left: 55%;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #ff4d6d;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Hey Twizznem 💕</h1>
+    <p>What month is itttt?</p>
+
+    <!-- PHOTO CONTAINER -->
+    <div class="photo-container">
+      <img src="photo1.jpg">
+      <img src="photo2.jpg">
+      <img src="photo3.jpg">
+      <img src="photo4.jpg">
+    </div>
+
+    <h2>Will you be my Valentine? 💌</h2>
+
+    <div class="buttons">
+      <button id="yesBtn">YES 💖</button>
+      <button id="noBtn">NO 🙄</button>
+    </div>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const message = document.getElementById("message");
+
+    const messages = [
+      "Nice try 😌",
+      "Wrong answer 🤭",
+      "System error 🚨",
+      "Just click YES already 🥹"
+    ];
+
+    let count = 0;
+
+    noBtn.addEventListener("mouseover", () => {
+      const x = Math.random() * 250;
+      const y = Math.random() * 40;
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+
+      message.textContent = messages[count % messages.length];
+      count++;
+    });
+
+    document.getElementById("yesBtn").addEventListener("click", () => {
+      document.querySelector(".card").innerHTML = `
+        <h1>YEEEEEEE 🎉💖</h1>
+        <p>You’re officially my Valentine ❤️</p>
+      `;
+    });
+  </script>
+</body>
+</html>
